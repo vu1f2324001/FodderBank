@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>डिजिटल FODDER बँक</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use Inter font and a custom theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-green': '#1E7C3C', // Deep agricultural green
+                        'secondary-green': '#A8E6A8', // Light accent green
+                        'text-color': '#333333',
+                        'light-bg': '#F7FBF8',
+                        'accent-red': '#D9534F',
+                        'accent-blue': '#4A90E2',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Inter Font Link -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons (Placeholder for official-looking icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body { background-color: #f7fbf8; }
+        .dashboard-content {
+            min-height: calc(100vh - 4rem); /* Header height approx 4rem */
+        }
+    </style>
+</head>
+<body class="font-sans text-text-color">
+
+    <!-- Main App Container -->
+    <div id="app">
+        <!-- The content will be rendered here based on the 'currentPage' state -->
+    </div>
+
+    <!-- JavaScript for State Management and View Rendering -->
+    <script>
+        let currentPage = 'login'; // Initial state: login
+
+        const userDetails = {
+            name: "शिवाजी पाटील",
+            id: "FARMER-10934",
+            village: "अहमदनगर",
+            quota: "1500 kg (Remaining)",
+            lastRequest: "15/11/2025",
+            notifications: [
+                { id: 1, message: "जवळच्या 'जय किसान फॉडर बँक' मध्ये आज 5000 किलो हिरवा चारा उपलब्ध.", time: "10 mins ago" },
+                { id: 2, message: "तुमच्या विनंती क्र. 4521 साठी वितरण टोकन तयार आहे.", time: "2 hours ago" },
+            ]
+        };
+
+        const availableFodder = [
+            { id: 1, name: "जय किसान फॉडर बँक", distance: "4.5 km", stock: "12,000 kg", status: "High Stock" },
+            { id: 2, name: "ग्रामीण कृषी केंद्र", distance: "8.2 km", stock: "4,500 kg", status: "Medium Stock" },
+            { id: 3, name: "पशुधन साठा आगार", distance: "15.0 km", stock: "500 kg", status: "Critical" }
+        ];
+
+        const myRequests = [
+            { id: '4521', type: 'सुका चारा (Dry)', quantity: '500 kg', date: '2025-11-20', status: 'Approved', token: 'DFB4521' },
+            { id: '4520', type: 'हिरवा चारा (Green)', quantity: '700 kg', date: '2025-11-15', status: 'Collected', token: 'DFB4520' },
+            { id: '4519', type: 'सुका चारा (Dry)', quantity: '1000 kg', date: '2025-11-10', status: 'Cancelled', token: 'DFB4519' },
+        ];
+
+
+        // --- Core Template Functions ---
+
+        function renderLogin() {
+            return `
+                <div class="min-h-screen flex items-center justify-center p-4">
+                    <div class="w-full max-w-md bg-white rounded-xl shadow-2xl p-8 transform transition duration-500 hover:scale-[1.01]">
+                        <div class="text-center mb-8">
+                            <i class="fas fa-leaf text-5xl text-primary-green"></i>
+                            <h1 class="text-3xl font-extrabold mt-3 text-primary-green">डिजिटल FOODER बँक</h1>
+                            <p class="text-gray-600 mt-1">शेतकरी आणि पशुधनासाठी स्मार्ट व्यवस्थापन</p>
+                        </div>
+                        
+                        <form id="loginForm" class="space-y-6">
+                            <!-- Aadhaar/Mobile Field -->
+                            <div>
+                                <label for="aadhaar" class="block text-sm font-medium text-gray-700">आधार/नोंदणी क्रमांक (Aadhaar/Reg. No.)</label>
+                                <input type="text" id="aadhaar" name="aadhaar" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-green focus:border-primary-green transition duration-150" placeholder="उदा. xxxx xxxx 1234">
+                            </div>
+
+                            <!-- Password Field -->
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700">पासवर्ड (Password)</label>
+                                <input type="password" id="password" name="password" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-green focus:border-primary-green transition duration-150" placeholder="• • • • • •">
+                            </div>
+
+                            <button type="submit" class="w-full py-3 bg-primary-green text-white font-semibold rounded-lg shadow-lg hover:bg-opacity-90 transition duration-200 transform hover:translate-y-[-1px]">
+                                लॉगिन करा | प्रवेश
+                            </button>
+                        </form>
+
+                        <p class="mt-6 text-center text-sm text-gray-500">
+                            नोंदणीकृत नसल्यास? <a href="#" class="text-primary-green font-medium hover:underline">नवीन नोंदणी</a>
+                        </p>
+                        <p class="mt-2 text-center text-xs text-gray-400">
+                            (हा पोर्टल केवळ नोंदणीकृत शेतकऱ्यांसाठी आहे.)
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHeader() {
+            return `
+                <header class="flex items-center justify-between p-4 bg-primary-green text-white shadow-md sticky top-0 z-10">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-tractor text-2xl"></i>
+                        <span class="text-xl font-bold">डिजिटल FOODER बँक | शेतकरी पोर्टल</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm font-medium hidden sm:block">नमस्कार, ${userDetails.name}</div>
+                        <button onclick="showPage('notifications')" class="p-2 rounded-full hover:bg-green-700 relative transition">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full ring-2 ring-primary-green bg-accent-red"></span>
+                        </button>
+                        <button onclick="showPage('profile')" class="flex items-center space-x-2 p-1 rounded-full hover:bg-green-700 transition">
+                            <i class="fas fa-user-circle text-2xl"></i>
+                        </button>
+                        <button onclick="logout()" class="text-sm px-3 py-1 border border-white rounded-lg hover:bg-white hover:text-primary-green transition">
+                            <i class="fas fa-sign-out-alt"></i> बाहेर पडा
+                        </button>
+                    </div>
+                </header>
+            `;
+        }
+
+        function renderSidebar() {
+            const navItems = [
+                { id: 'dashboard-availability', icon: 'fas fa-map-marked-alt', label: 'Availability | उपलब्धता' },
+                { id: 'dashboard-request', icon: 'fas fa-clipboard-list', label: 'Request Fodder | विनंती करा' },
+                { id: 'dashboard-myrequests', icon: 'fas fa-shipping-fast', label: 'My Requests | माझ्या विनंत्या' },
+                { id: 'dashboard-tracking', icon: 'fas fa-route', label: 'Delivery Tracking | वितरण ट्रॅकिंग' },
+                { id: 'notifications', icon: 'fas fa-bell', label: 'Notifications | सूचना' },
+                { id: 'profile', icon: 'fas fa-address-card', label: 'Profile | माहिती' },
+            ];
+
+            return `
+                <div class="w-64 bg-white shadow-xl dashboard-content hidden md:block">
+                    <div class="p-4 border-b border-gray-200">
+                        <p class="font-bold text-lg">${userDetails.name}</p>
+                        <p class="text-xs text-gray-500">शेतकरी ID: ${userDetails.id}</p>
+                    </div>
+                    <nav class="space-y-1 p-4">
+                        ${navItems.map(item => `
+                            <button onclick="showPage('${item.id}')" 
+                                class="w-full text-left flex items-center space-x-3 p-3 rounded-lg font-medium transition duration-150 
+                                ${currentPage === item.id ? 'bg-secondary-green text-primary-green shadow-md' : 'text-gray-600 hover:bg-gray-100 hover:text-primary-green'}">
+                                <i class="${item.icon} w-5"></i>
+                                <span>${item.label}</span>
+                            </button>
+                        `).join('')}
+                    </nav>
+                </div>
+            `;
+        }
+        
+        function renderDashboardContent() {
+            switch (currentPage) {
+                case 'dashboard-request':
+                    return renderRequestFodder();
+                case 'dashboard-myrequests':
+                    return renderMyRequests();
+                case 'dashboard-tracking':
+                    return renderDeliveryTracking();
+                case 'notifications':
+                    return renderNotifications();
+                case 'profile':
+                    return renderProfile();
+                case 'dashboard-availability':
+                default:
+                    return renderFodderAvailability();
+            }
+        }
+        
+        // --- Dashboard Section Templates ---
+
+        function renderFodderAvailability() {
+            return `
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-primary-green mb-6 border-b pb-2">Fodder Availability | चाऱ्याची उपलब्धता</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <!-- Quota Card -->
+                        <div class="bg-primary-green text-white p-6 rounded-xl shadow-lg transform hover:scale-[1.02] transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <i class="fas fa-balance-scale text-3xl"></i>
+                                <span class="text-4xl font-extrabold">${userDetails.quota.split(' ')[0]}</span>
+                            </div>
+                            <p class="mt-3 text-sm font-semibold">मासिक चारा कोटा (Monthly Quota)</p>
+                            <p class="text-lg">${userDetails.quota.split(' ')[1]} ${userDetails.quota.split(' ')[2]}</p>
+                        </div>
+
+                        <!-- Emergency Button Card -->
+                        <div class="bg-accent-red text-white p-6 rounded-xl shadow-lg col-span-1 lg:col-span-2 flex items-center justify-between transform hover:scale-[1.01] transition duration-300">
+                            <div>
+                                <h3 class="text-xl font-bold flex items-center space-x-2">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>आपत्कालीन चारा विनंती | Emergency Fodder Request</span>
+                                </h3>
+                                <p class="text-sm mt-1 opacity-90">केवळ दुष्काळ किंवा नैसर्गिक आपत्काळात वापरा. एकदाच वापरण्याची मर्यादा आहे.</p>
+                            </div>
+                            <button class="bg-white text-accent-red font-bold px-6 py-3 rounded-full shadow-xl hover:bg-gray-200 transition">
+                                Request Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Nearby Fodder Bank Map (Placeholder) -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center space-x-2 mb-4">
+                            <i class="fas fa-globe-asia text-primary-green"></i> <span>जवळचे चारा बँक मॅप (Nearby Fodder Bank Map)</span>
+                        </h3>
+                        <div class="h-64 bg-gray-200 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-400">
+                            <p class="text-gray-500 font-medium">GIS Map Placeholder (Map will show your location and bank markers)</p>
+                        </div>
+                    </div>
+
+                    <!-- Fodder Stock List -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center space-x-2 mb-4">
+                            <i class="fas fa-list-ul text-primary-green"></i> <span>उपलब्ध चारा साठा (Current Stock List)</span>
+                        </h3>
+                        <div class="space-y-4">
+                            ${availableFodder.map(bank => `
+                                <div class="p-4 border rounded-lg flex justify-between items-center hover:bg-light-bg transition duration-150 ${bank.stock.includes('Critical') ? 'border-accent-red bg-red-50' : 'border-secondary-green'}">
+                                    <div>
+                                        <p class="font-bold text-lg text-primary-green">${bank.name}</p>
+                                        <p class="text-sm text-gray-500">${bank.distance} away | ${bank.stock} available</p>
+                                    </div>
+                                    <button onclick="showPage('dashboard-request')" class="px-4 py-2 bg-accent-blue text-white rounded-full text-sm hover:bg-blue-600 transition">
+                                        विनंती करा
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRequestFodder() {
+            return `
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-primary-green mb-6 border-b pb-2">Request Fodder | चाऱ्याची विनंती करा</h2>
+                    
+                    <div class="bg-white p-8 rounded-xl shadow-lg max-w-2xl mx-auto">
+                        <form class="space-y-6">
+                            <!-- Fodder Type -->
+                            <div>
+                                <label for="fodderType" class="block text-sm font-medium text-gray-700">चाऱ्याचा प्रकार (Fodder Type) <span class="text-red-500">*</span></label>
+                                <select id="fodderType" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-green focus:border-primary-green">
+                                    <option value="">निवडा...</option>
+                                    <option value="dry">सुका चारा (Dry Fodder)</option>
+                                    <option value="green">हिरवा चारा (Green Fodder)</option>
+                                    <option value="silage">सायलेज (Silage)</option>
+                                </select>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div>
+                                <label for="quantity" class="block text-sm font-medium text-gray-700">विनंती केलेली मात्रा (Quantity in Kg) <span class="text-red-500">*</span></label>
+                                <input type="number" id="quantity" required min="10" max="1500" placeholder="उदा. 500" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-green focus:border-primary-green">
+                                <p class="text-xs text-gray-500 mt-1">तुमचा उर्वरित मासिक कोटा: ${userDetails.quota}</p>
+                            </div>
+
+                            <!-- Preferred Bank -->
+                            <div>
+                                <label for="bank" class="block text-sm font-medium text-gray-700">पसंतीचा चारा बँक (Preferred Fodder Bank)</label>
+                                <select id="bank" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-green focus:border-primary-green">
+                                    <option value="">स्वयंचलित निवडा (Select Automatically)</option>
+                                    ${availableFodder.map(bank => `<option value="${bank.id}">${bank.name} (${bank.distance} | ${bank.stock})</option>`).join('')}
+                                </select>
+                            </div>
+
+                            <!-- Pickup/Delivery -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700">वितरण पद्धत (Distribution Method) <span class="text-red-500">*</span></label>
+                                <div class="flex space-x-6">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="deliveryMethod" value="pickup" required class="form-radio text-primary-green focus:ring-primary-green">
+                                        <span class="ml-2">स्वतः घेऊन जा (Self Pickup)</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="deliveryMethod" value="delivery" class="form-radio text-primary-green focus:ring-primary-green">
+                                        <span class="ml-2">घरी वितरण (Home Delivery - Extra Charges)</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="w-full py-3 bg-primary-green text-white font-semibold rounded-lg shadow-lg hover:bg-opacity-90 transition duration-200 transform hover:translate-y-[-1px] flex items-center justify-center space-x-2">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>विनंती सबमिट करा (Submit Request)</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMyRequests() {
+            return `
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-primary-green mb-6 border-b pb-2">My Requests | माझ्या विनंत्या आणि स्थिती</h2>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-light-bg">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-primary-green uppercase tracking-wider">विनंती क्र. (ID)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-primary-green uppercase tracking-wider">प्रकार (Type)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-primary-green uppercase tracking-wider">मात्रा (Qty)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-primary-green uppercase tracking-wider">स्थिती (Status)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-primary-green uppercase tracking-wider">टोकन (Token)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-primary-green uppercase tracking-wider">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                ${myRequests.map(req => `
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${req.id}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${req.type}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${req.quantity}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-3 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                ${req.status === 'Approved' ? 'bg-secondary-green text-primary-green' : 
+                                                  req.status === 'Collected' ? 'bg-blue-100 text-accent-blue' : 
+                                                  'bg-red-100 text-accent-red'}">
+                                                ${req.status === 'Approved' ? 'मंजूर' : req.status === 'Collected' ? 'वितरित' : 'रद्द'}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">${req.token}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            <button onclick="showPage('dashboard-tracking')" class="text-accent-blue hover:underline text-xs font-medium">ट्रॅक करा</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDeliveryTracking() {
+            // Simplified tracking view for the approved request DFB4521
+            const trackingData = [
+                { stage: 1, label: 'विनंती सबमिट', date: '2025-11-20', status: 'completed' },
+                { stage: 2, label: 'प्रशासक मंजुरी', date: '2025-11-20', status: 'completed' },
+                { stage: 3, label: 'चारा बँक वाटप टोकन तयार', date: '2025-11-21', status: 'completed' },
+                { stage: 4, label: 'वितरणासाठी/घेऊन जाण्यासाठी तयार', date: '2025-11-21', status: 'active' },
+                { stage: 5, label: 'वितरण पूर्ण', date: '', status: 'pending' },
+            ];
+
+            return `
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-primary-green mb-6 border-b pb-2">Delivery Tracking | वितरण ट्रॅकिंग (ID: DFB4521)</h2>
+                    
+                    <div class="bg-white p-8 rounded-xl shadow-lg max-w-3xl mx-auto">
+                        <div class="flex justify-between items-center mb-6 border-b pb-4">
+                            <p class="text-xl font-semibold">Current Status:</p>
+                            <span class="px-4 py-1 bg-secondary-green text-primary-green font-bold rounded-full">Ready for Pickup</span>
+                        </div>
+
+                        <!-- Timeline/Stepper -->
+                        <div class="relative pt-10">
+                            ${trackingData.map((item, index) => `
+                                <div class="flex mb-8">
+                                    <div class="flex flex-col items-center mr-4">
+                                        <div class="w-10 h-10 rounded-full flex items-center justify-center 
+                                            ${item.status === 'completed' ? 'bg-primary-green text-white' : 
+                                              item.status === 'active' ? 'bg-accent-yellow text-primary-green border-4 border-primary-green' : 
+                                              'bg-gray-300 text-gray-600'} 
+                                            font-bold text-lg shadow-md">
+                                            ${index + 1}
+                                        </div>
+                                        ${index < trackingData.length - 1 ? `<div class="w-1 h-full ${item.status === 'completed' ? 'bg-primary-green' : 'bg-gray-300'}"></div>` : ''}
+                                    </div>
+                                    <div class="pt-2">
+                                        <p class="font-semibold text-lg ${item.status === 'active' ? 'text-primary-green' : 'text-gray-800'}">${item.label}</p>
+                                        <p class="text-sm text-gray-500">${item.date ? `Date: ${item.date}` : 'Waiting...'}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="mt-8 pt-4 border-t text-center">
+                             <p class="text-sm text-gray-600">Fodder Bank Location: जय किसान फॉडर बँक (4.5 km away)</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderNotifications() {
+             return `
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-primary-green mb-6 border-b pb-2">Notifications | सूचना आणि अलर्ट</h2>
+                    
+                    <div class="space-y-4">
+                        ${userDetails.notifications.map(note => `
+                            <div class="flex items-start p-4 bg-white rounded-xl shadow-lg border-l-4 ${note.id === 1 ? 'border-primary-green' : 'border-accent-blue'} hover:shadow-xl transition duration-150">
+                                <i class="fas fa-bullhorn text-xl mt-1 mr-3 ${note.id === 1 ? 'text-primary-green' : 'text-accent-blue'}"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">${note.message}</p>
+                                    <p class="text-xs text-gray-500 mt-1">${note.time}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                        
+                        <div class="flex items-start p-4 bg-white rounded-xl shadow-lg border-l-4 border-gray-400">
+                             <i class="fas fa-info-circle text-xl mt-1 mr-3 text-gray-500"></i>
+                                <div>
+                                    <p class="font-medium text-gray-600">तुमच्या जनावरांसाठी आवश्यक चाऱ्याची मात्रा तपासण्यासाठी प्रोफाइल अपडेट करा.</p>
+                                    <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                                </div>
+                        </div>
+                        
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button class="text-primary-green hover:underline font-medium text-sm">Show All Notifications</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProfile() {
+             return `
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-primary-green mb-6 border-b pb-2">Profile | शेतकरी माहिती</h2>
+                    
+                    <div class="bg-white p-8 rounded-xl shadow-lg max-w-xl mx-auto">
+                        <div class="flex flex-col items-center border-b pb-6 mb-6">
+                            <i class="fas fa-user-circle text-6xl text-primary-green"></i>
+                            <h3 class="text-2xl font-bold mt-3">${userDetails.name}</h3>
+                            <p class="text-md text-gray-600">शेतकरी ID: ${userDetails.id}</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="font-medium text-gray-700">गाव/पत्ता:</span>
+                                <span class="text-gray-900">${userDetails.village}</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="font-medium text-gray-700">आधार क्रमांक:</span>
+                                <span class="text-gray-900">XXXX XXXX 1234</span>
+                            </div>
+                            <div class="flex justify-between border-b pb-2">
+                                <span class="font-medium text-gray-700">नोंदणीची तारीख:</span>
+                                <span class="text-gray-900">10/01/2024</span>
+                            </div>
+                            <div class="flex justify-between pb-2">
+                                <span class="font-medium text-gray-700">उर्वरित चारा कोटा:</span>
+                                <span class="text-lg font-bold text-primary-green">${userDetails.quota}</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex justify-center space-x-4">
+                            <button class="px-6 py-2 bg-accent-blue text-white rounded-lg shadow-md hover:bg-blue-600 transition">
+                                <i class="fas fa-edit"></i> माहिती अपडेट करा
+                            </button>
+                            <button class="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition">
+                                <i class="fas fa-key"></i> पासवर्ड बदला
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Main Render & Logic ---
+
+        function renderApp() {
+            const appDiv = document.getElementById('app');
+            appDiv.innerHTML = ''; // Clear previous content
+
+            if (currentPage === 'login') {
+                appDiv.innerHTML = renderLogin();
+                document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            } else {
+                appDiv.innerHTML = `
+                    ${renderHeader()}
+                    <div class="flex">
+                        ${renderSidebar()}
+                        <div class="flex-grow dashboard-content bg-light-bg">
+                            ${renderDashboardContent()}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            // In a real app, this would be an API call.
+            // For this UI design, we simulate success.
+            showPage('dashboard-availability');
+        }
+
+        function logout() {
+            currentPage = 'login';
+            renderApp();
+        }
+        
+        function showPage(pageId) {
+            currentPage = pageId;
+            renderApp();
+            // Scroll to top of content area on navigation
+            window.scrollTo(0, 0); 
+        }
+
+        // Initial render
+        renderApp();
+    </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Methodology Flow Diagram</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Very light green background */
+        }
+        .flow-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .flow-title {
+            color: #14532d; /* Darker Green */
+            border-bottom: 4px solid #4ade80; /* Accent Green */
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .step-box {
+            width: 100%;
+            max-width: 350px;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #34d399; /* Medium Green Border */
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .step-process {
+            background-color: #ecfdf5; /* Very light Mint Green */
+            color: #065f46; /* Dark Green Text */
+        }
+        .step-development {
+            background-color: #d1fae5; /* Light Mint Green for Development Steps */
+            color: #047857; /* Darker Mint Green Text */
+        }
+        .step-final {
+            background-color: #10b981; /* Solid Green for Final Step */
+            color: white;
+            border: 2px solid #059669;
+            font-weight: 700;
+        }
+        .step-icon {
+            font-size: 2.2rem;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .step-number {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+            color: #064e3b;
+        }
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .step-description {
+            font-size: 0.9rem;
+            color: #104c3d;
+        }
+        .step-development .step-description {
+            color: #02654c;
+        }
+        .step-final .step-description {
+            color: white;
+        }
+        .arrow {
+            width: 0;
+            height: 30px;
+            border-left: 3px solid #10b981; /* Green Arrow Line */
+            margin: 0 auto;
+            position: relative;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #10b981 transparent transparent transparent;
+        }
+
+        /* Adjustments for the Development Step 6 list */
+        .module-list {
+            text-align: left;
+            margin: 0;
+            padding-left: 15px;
+            list-style-type: none;
+        }
+        .module-list li:before {
+            content: '• ';
+            color: #047857;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flow-container">
+        <h1 class="flow-title text-center text-3xl font-bold pb-2 mb-8">
+            Research Methodology Flow Diagram
+        </h1>
+
+        <!-- 1. Problem Identification -->
+        <div class="flow-step">
+            <div class="step-box step-process">
+                <div class="step-icon">🌾</div>
+                <div class="step-number">1.</div>
+                <div class="step-title">Problem Identification</div>
+                <div class="step-description">Fodder Scarcity during drought and disasters</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 2. Literature Survey -->
+        <div class="flow-step">
+            <div class="step-box step-process">
+                <div class="step-icon">📚</div>
+                <div class="step-number">2.</div>
+                <div class="step-title">Literature Survey</div>
+                <div class="step-description">Existing fodder distribution systems & research</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 3. Requirement Analysis -->
+        <div class="flow-step">
+            <div class="step-box step-process">
+                <div class="step-icon">👤</div>
+                <div class="step-number">3.</div>
+                <div class="step-title">Requirement Analysis</div>
+                <div class="step-description">Farmer, Fodder Bank Manager, Admin needs</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 4. System Architecture Design -->
+        <div class="flow-step">
+            <div class="step-box step-development">
+                <div class="step-icon">⚙️</div>
+                <div class="step-number">4.</div>
+                <div class="step-title">System Architecture Design</div>
+                <div class="step-description">3-tier system: Frontend, Backend, Database</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 5. UI/UX Design -->
+        <div class="flow-step">
+            <div class="step-box step-development">
+                <div class="step-icon">🎨</div>
+                <div class="step-number">5.</div>
+                <div class="step-title">UI/UX Design</div>
+                <div class="step-description">Farmer UI, Manager UI, Admin Dashboard</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 6. Development -->
+        <div class="flow-step">
+            <div class="step-box step-development">
+                <div class="step-icon">💻</div>
+                <div class="step-number">6.</div>
+                <div class="step-title">Development</div>
+                <div class="step-description">
+                    <ul class="module-list">
+                        <li>Farmer Module</li>
+                        <li>Fodder Bank Manager Module</li>
+                        <li>Admin Module</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+        
+        <!-- 7. Database Design -->
+        <div class="flow-step">
+            <div class="step-box step-development">
+                <div class="step-icon">🗄️</div>
+                <div class="step-number">7.</div>
+                <div class="step-title">Database Design</div>
+                <div class="step-description">Users, Fodder Stock, Requests, Distribution Tables</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 8. Integration & Implementation -->
+        <div class="flow-step">
+            <div class="step-box step-process">
+                <div class="step-icon">🔗</div>
+                <div class="step-number">8.</div>
+                <div class="step-title">Integration & Implementation</div>
+                <div class="step-description">Connecting frontend, backend, database</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 9. Testing & Validation -->
+        <div class="flow-step">
+            <div class="step-box step-process">
+                <div class="step-icon">✅</div>
+                <div class="step-number">9.</div>
+                <div class="step-title">Testing & Validation</div>
+                <div class="step-description">Module testing, performance testing, user testing</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 10. Real-time Simulation & Deployment -->
+        <div class="flow-step">
+            <div class="step-box step-process">
+                <div class="step-icon">🚀</div>
+                <div class="step-number">10.</div>
+                <div class="step-title">Real-time Simulation & Deployment</div>
+                <div class="step-description">Launching the live platform environment</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 11. Result & Performance Analysis -->
+        <div class="flow-step">
+            <div class="step-box step-process">
+                <div class="step-icon">📊</div>
+                <div class="step-number">11.</div>
+                <div class="step-title">Result & Performance Analysis</div>
+                <div class="step-description">Evaluating system effectiveness and impact</div>
+            </div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 12. Conclusion & Future Enhancement (Final Step) -->
+        <div class="flow-step">
+            <div class="step-box step-final">
+                <div class="step-icon">🎯</div>
+                <div class="step-number">12.</div>
+                <div class="step-title">Conclusion & Future Enhancement</div>
+                <div class="step-description">Project summary and next steps</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
