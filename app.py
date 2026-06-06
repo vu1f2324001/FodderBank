@@ -7,7 +7,7 @@ import random
 import string
 import bcrypt
 
-app = Flask(__name__)
+app = Flask(__name__) 
 app.secret_key = os.environ.get('FODDER_APP_SECRET') or os.urandom(24)
 app.config['SESSION_COOKIE_SECURE'] = False  # Allow non-HTTPS in development
 app.config['SESSION_COOKIE_HTTPONLY'] = False  # Allow JS access in development
